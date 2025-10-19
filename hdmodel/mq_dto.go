@@ -1,4 +1,4 @@
-package model
+package hdmodel
 
 type UserImageMqDto struct {
 	UserID   int64

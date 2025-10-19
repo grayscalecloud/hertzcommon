@@ -10,7 +10,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/config"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/grayscalecloud/hertzcommon/model"
+	"github.com/grayscalecloud/hertzcommon/hdmodel"
 	"github.com/grayscalecloud/hertzcommon/monitor"
 	hertzlogrus "github.com/hertz-contrib/obs-opentelemetry/logging/logrus"
 	hertzotelprovider "github.com/hertz-contrib/obs-opentelemetry/provider"
@@ -20,7 +20,7 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-func NewHdServer(hzCfg *model.Hertz, monitorCfg *model.Monitor) *server.Hertz {
+func NewHdServer(hzCfg *hdmodel.Hertz, monitorCfg *hdmodel.Monitor) *server.Hertz {
 	var opts []config.Option
 	var cfg *hertzoteltracing.Config
 	if monitorCfg.OTel.Enable {
@@ -46,7 +46,7 @@ func NewHdServer(hzCfg *model.Hertz, monitorCfg *model.Monitor) *server.Hertz {
 	return h
 }
 
-func hertzInit(hzCfg *model.Hertz, monitorCfg *model.Monitor, tracer config.Option) (opts []config.Option) {
+func hertzInit(hzCfg *hdmodel.Hertz, monitorCfg *hdmodel.Monitor, tracer config.Option) (opts []config.Option) {
 	address := hzCfg.Address
 	opts = append(opts, tracer)
 	// 服务地址
@@ -69,7 +69,7 @@ func hertzInit(hzCfg *model.Hertz, monitorCfg *model.Monitor, tracer config.Opti
 
 // registerMiddleware 注册中间件
 // 为Hertz服务器注册各种中间件，包括日志、pprof、gzip压缩、访问日志、恢复和CORS等
-func registerMiddleware(h *server.Hertz, cfg *hertzoteltracing.Config, hzCfg *model.Hertz) {
+func registerMiddleware(h *server.Hertz, cfg *hertzoteltracing.Config, hzCfg *hdmodel.Hertz) {
 	// log
 	if cfg != nil {
 		h.Use(hertzoteltracing.ServerMiddleware(cfg))

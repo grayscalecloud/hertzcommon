@@ -23,7 +23,7 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/route"
-	"github.com/grayscalecloud/hertzcommon/model"
+	"github.com/grayscalecloud/hertzcommon/hdmodel"
 	"github.com/grayscalecloud/hertzcommon/utils"
 	"github.com/nacos-group/nacos-sdk-go/clients"
 	"github.com/nacos-group/nacos-sdk-go/common/constant"
@@ -35,7 +35,7 @@ import (
 
 var Reg *prometheus.Registry
 
-func initMetric(serverName string, cfg *model.Monitor) route.CtxCallback {
+func initMetric(serverName string, cfg *hdmodel.Monitor) route.CtxCallback {
 	Reg = prometheus.NewRegistry()
 	Reg.MustRegister(collectors.NewGoCollector())
 	Reg.MustRegister(collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}))

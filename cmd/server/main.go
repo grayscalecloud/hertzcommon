@@ -1,22 +1,22 @@
 package main
 
 import (
+	"github.com/grayscalecloud/hertzcommon/hdmodel"
 	"github.com/grayscalecloud/hertzcommon/hdserver"
-	"github.com/grayscalecloud/hertzcommon/model"
 )
 
 func main() {
-	hertzCfg := &model.Hertz{
+	hertzCfg := &hdmodel.Hertz{
 		Service:       "user-service",
 		Address:       ":8080",
 		EnableSwagger: true,
 	}
-	monitorCfg := &model.Monitor{
-		Prometheus: model.Prometheus{
+	monitorCfg := &hdmodel.Monitor{
+		Prometheus: hdmodel.Prometheus{
 			Enable:      true,
 			MetricsPort: 9090,
 		},
-		OTel: model.OTel{
+		OTel: hdmodel.OTel{
 			Enable:   true,
 			Endpoint: "localhost:4317",
 		},

@@ -6,17 +6,17 @@ import (
 	"time"
 
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/grayscalecloud/hertzcommon/model"
+	"github.com/grayscalecloud/hertzcommon/hdmodel"
 	"github.com/hashicorp/consul/api"
 	"gopkg.in/yaml.v2"
 )
 
 type CommonConfig struct {
 	Env   string
-	Kitex model.Kitex `yaml:"kitex"`
-	MySQL model.MySQL `yaml:"mysql"`
-	Redis model.Redis `yaml:"redis"`
-	OTel  model.OTel  `yaml:"otel"`
+	Kitex hdmodel.Kitex `yaml:"kitex"`
+	MySQL hdmodel.MySQL `yaml:"mysql"`
+	Redis hdmodel.Redis `yaml:"redis"`
+	OTel  hdmodel.OTel  `yaml:"otel"`
 }
 
 // ConsulConfigClient Consul 配置客户端
@@ -250,13 +250,13 @@ func (c *ConsulConfigClient) GetCommonConfig(group string) (*CommonConfig, error
 }
 
 // GetPasetoPubConfig 获取 Paseto 公钥配置
-func (c *ConsulConfigClient) GetPasetoPubConfig(group string) (*model.PasetoConfig, error) {
+func (c *ConsulConfigClient) GetPasetoPubConfig(group string) (*hdmodel.PasetoConfig, error) {
 	content, err := c.GetConfig("pasetopub", group)
 	if err != nil {
 		return nil, err
 	}
 
-	conf := new(model.PasetoConfig)
+	conf := new(hdmodel.PasetoConfig)
 	err = yaml.Unmarshal([]byte(content), &conf)
 	if err != nil {
 		return nil, fmt.Errorf("解析配置失败: %w", err)
@@ -266,13 +266,13 @@ func (c *ConsulConfigClient) GetPasetoPubConfig(group string) (*model.PasetoConf
 }
 
 // GetPasetoSecretConfig 获取 Paseto 密钥配置
-func (c *ConsulConfigClient) GetPasetoSecretConfig(group string) (*model.PasetoConfig, error) {
+func (c *ConsulConfigClient) GetPasetoSecretConfig(group string) (*hdmodel.PasetoConfig, error) {
 	content, err := c.GetConfig("pasetosecret", group)
 	if err != nil {
 		return nil, err
 	}
 
-	conf := new(model.PasetoConfig)
+	conf := new(hdmodel.PasetoConfig)
 	err = yaml.Unmarshal([]byte(content), &conf)
 	if err != nil {
 		return nil, fmt.Errorf("解析配置失败: %w", err)
@@ -364,7 +364,7 @@ func GetKvConfig[T any](registryAddr string, keyName string) (*T, error) {
 	return conf, nil
 }
 
-func GetPasetoPubConfig(registryAddr string) (*model.PasetoConfig, error) {
+func GetPasetoPubConfig(registryAddr string) (*hdmodel.PasetoConfig, error) {
 	client, err := api.NewClient(&api.Config{Address: registryAddr})
 	if err != nil {
 		fmt.Println("Error creating Consul client:", err)
@@ -376,7 +376,7 @@ func GetPasetoPubConfig(registryAddr string) (*model.PasetoConfig, error) {
 		fmt.Println("Error getting config:", err)
 		return nil, err
 	}
-	conf := new(model.PasetoConfig)
+	conf := new(hdmodel.PasetoConfig)
 	err = yaml.Unmarshal(content.Value, &conf)
 	if err != nil {
 		hlog.Error("parse yaml error - %v", err)
@@ -385,7 +385,7 @@ func GetPasetoPubConfig(registryAddr string) (*model.PasetoConfig, error) {
 
 	return conf, nil
 }
-func GetPasetoSecretConfig(registryAddr string) (*model.PasetoConfig, error) {
+func GetPasetoSecretConfig(registryAddr string) (*hdmodel.PasetoConfig, error) {
 	client, err := api.NewClient(&api.Config{Address: registryAddr})
 	if err != nil {
 		fmt.Println("Error creating Consul client:", err)
@@ -397,7 +397,7 @@ func GetPasetoSecretConfig(registryAddr string) (*model.PasetoConfig, error) {
 		fmt.Println("Error getting config:", err)
 		return nil, err
 	}
-	conf := new(model.PasetoConfig)
+	conf := new(hdmodel.PasetoConfig)
 	err = yaml.Unmarshal(content.Value, &conf)
 	if err != nil {
 		hlog.Error("parse yaml error - %v", err)

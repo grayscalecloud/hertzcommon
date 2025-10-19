@@ -1,4 +1,4 @@
-package model
+package hdmodel
 
 type PasetoConfig struct {
 	PubKey   string `mapstructure:"pub_key" json:"pub_key" yaml:"pub_key"`

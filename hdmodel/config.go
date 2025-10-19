@@ -1,4 +1,4 @@
-package model
+package hdmodel
 
 type MySQL struct {
 	DSN string `yaml:"dsn"`

@@ -18,14 +18,14 @@ import (
 	"sync"
 
 	"github.com/cloudwego/hertz/pkg/route"
-	"github.com/grayscalecloud/hertzcommon/model"
+	"github.com/grayscalecloud/hertzcommon/hdmodel"
 )
 
 var once sync.Once
 
 var Hooks []route.CtxCallback
 
-func InitMtl(serviceName string, cfg *model.Monitor) {
+func InitMtl(serviceName string, cfg *hdmodel.Monitor) {
 	once.Do(
 		func() {
 			Hooks = append(Hooks, InitTracing(serviceName, cfg), initMetric(serviceName, cfg))

@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/grayscalecloud/hertzcommon/model"
+	"github.com/grayscalecloud/hertzcommon/hdmodel"
 )
 
 // ConfigType 配置类型
@@ -221,7 +221,7 @@ func (f *ConfigFactory) GetKvConfig(dataId, group string) (string, error) {
 }
 
 // GetPasetoPubConfig 获取 Paseto 公钥配置（兼容接口）
-func (f *ConfigFactory) GetPasetoPubConfig(group string) (*model.PasetoConfig, error) {
+func (f *ConfigFactory) GetPasetoPubConfig(group string) (*hdmodel.PasetoConfig, error) {
 	switch f.configType {
 	case ConfigTypeNacos:
 		if f.nacosClient == nil {
@@ -239,7 +239,7 @@ func (f *ConfigFactory) GetPasetoPubConfig(group string) (*model.PasetoConfig, e
 }
 
 // GetPasetoSecretConfig 获取 Paseto 密钥配置（兼容接口）
-func (f *ConfigFactory) GetPasetoSecretConfig(group string) (*model.PasetoConfig, error) {
+func (f *ConfigFactory) GetPasetoSecretConfig(group string) (*hdmodel.PasetoConfig, error) {
 	switch f.configType {
 	case ConfigTypeNacos:
 		if f.nacosClient == nil {
@@ -333,10 +333,10 @@ func GetKvConfigGlobal(keyName, group string) (string, error) {
 	return factory.GetKvConfig(keyName, group)
 }
 
-func GetPasetoPubConfigGlobal(group string) (*model.PasetoConfig, error) {
+func GetPasetoPubConfigGlobal(group string) (*hdmodel.PasetoConfig, error) {
 	return GetGlobalConfigFactory().GetPasetoPubConfig(group)
 }
 
-func GetPasetoSecretConfigGlobal(group string) (*model.PasetoConfig, error) {
+func GetPasetoSecretConfigGlobal(group string) (*hdmodel.PasetoConfig, error) {
 	return GetGlobalConfigFactory().GetPasetoSecretConfig(group)
 }

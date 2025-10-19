@@ -18,7 +18,7 @@ import (
 	"context"
 
 	"github.com/cloudwego/hertz/pkg/route"
-	"github.com/grayscalecloud/hertzcommon/model"
+	"github.com/grayscalecloud/hertzcommon/hdmodel"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/sdk/resource"
@@ -28,7 +28,7 @@ import (
 
 var TracerProvider *tracesdk.TracerProvider
 
-func InitTracing(serviceName string, cfg *model.Monitor) route.CtxCallback {
+func InitTracing(serviceName string, cfg *hdmodel.Monitor) route.CtxCallback {
 	exporter, err := otlptracegrpc.New(
 		context.Background(),
 		otlptracegrpc.WithEndpoint(cfg.OTel.Endpoint),

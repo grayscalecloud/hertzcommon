@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/grayscalecloud/hertzcommon/model"
+	"github.com/grayscalecloud/hertzcommon/hdmodel"
 	"github.com/nacos-group/nacos-sdk-go/clients"
 	"github.com/nacos-group/nacos-sdk-go/clients/config_client"
 	"github.com/nacos-group/nacos-sdk-go/common/constant"
@@ -136,13 +136,13 @@ func (c *NacosConfigClient) GetKvConfigRaw(dataId, group string) (string, error)
 }
 
 // GetPasetoPubConfig 获取 Paseto 公钥配置
-func (c *NacosConfigClient) GetPasetoPubConfig(group string) (*model.PasetoConfig, error) {
+func (c *NacosConfigClient) GetPasetoPubConfig(group string) (*hdmodel.PasetoConfig, error) {
 	content, err := c.GetConfig("pasetopub", group)
 	if err != nil {
 		return nil, err
 	}
 
-	conf := new(model.PasetoConfig)
+	conf := new(hdmodel.PasetoConfig)
 	err = yaml.Unmarshal([]byte(content), &conf)
 	if err != nil {
 		hlog.Error("解析 Paseto 公钥配置失败: %v", err)
@@ -153,13 +153,13 @@ func (c *NacosConfigClient) GetPasetoPubConfig(group string) (*model.PasetoConfi
 }
 
 // GetPasetoSecretConfig 获取 Paseto 密钥配置
-func (c *NacosConfigClient) GetPasetoSecretConfig(group string) (*model.PasetoConfig, error) {
+func (c *NacosConfigClient) GetPasetoSecretConfig(group string) (*hdmodel.PasetoConfig, error) {
 	content, err := c.GetConfig("pasetosecret", group)
 	if err != nil {
 		return nil, err
 	}
 
-	conf := new(model.PasetoConfig)
+	conf := new(hdmodel.PasetoConfig)
 	err = yaml.Unmarshal([]byte(content), &conf)
 	if err != nil {
 		hlog.Error("解析 Paseto 密钥配置失败: %v", err)
