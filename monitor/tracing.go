@@ -16,6 +16,7 @@ package monitor
 
 import (
 	"context"
+	"time"
 
 	"github.com/cloudwego/hertz/pkg/route"
 	"github.com/grayscalecloud/hertzcommon/hdmodel"
@@ -32,13 +33,18 @@ func InitTracing(serviceName string, cfg *hdmodel.Monitor) route.CtxCallback {
 	exporter, err := otlptracegrpc.New(
 		context.Background(),
 		otlptracegrpc.WithEndpoint(cfg.OTel.Endpoint),
-		// otlptracegrpc.WithEndpoint(conf.GetConf().Telemetry.Endpoint),
 		otlptracegrpc.WithInsecure(),
 	)
 	if err != nil {
 		panic(err)
 	}
-	processor := tracesdk.NewBatchSpanProcessor(exporter)
+
+	// 使用批量处理器，提高性能
+	processor := tracesdk.NewBatchSpanProcessor(
+		exporter,
+		tracesdk.WithBatchTimeout(5*time.Second),
+		tracesdk.WithExportTimeout(30*time.Second),
+	)
 
 	res, err := resource.New(
 		context.Background(),
@@ -49,14 +55,16 @@ func InitTracing(serviceName string, cfg *hdmodel.Monitor) route.CtxCallback {
 	if err != nil {
 		res = resource.Default()
 	}
+
 	TracerProvider = tracesdk.NewTracerProvider(
 		tracesdk.WithSpanProcessor(processor),
 		tracesdk.WithResource(res),
+		tracesdk.WithSampler(tracesdk.TraceIDRatioBased(1.0)), // 采样率100%
 	)
 	otel.SetTracerProvider(TracerProvider)
 
 	return route.CtxCallback(func(ctx context.Context) {
-		// 移除 shutdown，应该在程序退出时执行
+		// 这里不执行shutdown，在程序退出时统一处理
 	})
 }
 
