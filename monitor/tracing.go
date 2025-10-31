@@ -45,7 +45,7 @@ func InitTracing(serviceName string, cfg *hdmodel.Monitor) route.CtxCallback {
 		tracesdk.WithBatchTimeout(5*time.Second),
 		tracesdk.WithExportTimeout(30*time.Second),
 	)
-
+	tenantProcessor := NewTenantIDProcessor(processor)
 	res, err := resource.New(
 		context.Background(),
 		resource.WithAttributes(
@@ -57,7 +57,7 @@ func InitTracing(serviceName string, cfg *hdmodel.Monitor) route.CtxCallback {
 	}
 
 	TracerProvider = tracesdk.NewTracerProvider(
-		tracesdk.WithSpanProcessor(processor),
+		tracesdk.WithSpanProcessor(tenantProcessor),
 		tracesdk.WithResource(res),
 		tracesdk.WithSampler(tracesdk.TraceIDRatioBased(1.0)), // 采样率100%
 	)
