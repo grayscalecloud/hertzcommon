@@ -39,12 +39,12 @@ func InitTracing(serviceName string, cfg *hdmodel.Monitor) route.CtxCallback {
 		panic(err)
 	}
 
-    // 使用批量处理器，提高性能
-    processor := tracesdk.NewBatchSpanProcessor(
-        exporter,
-        tracesdk.WithBatchTimeout(5*time.Second),
-        tracesdk.WithExportTimeout(30*time.Second),
-    )
+	// 使用批量处理器，提高性能
+	processor := tracesdk.NewBatchSpanProcessor(
+		exporter,
+		tracesdk.WithBatchTimeout(5*time.Second),
+		tracesdk.WithExportTimeout(30*time.Second),
+	)
 	res, err := resource.New(
 		context.Background(),
 		resource.WithAttributes(
@@ -55,8 +55,8 @@ func InitTracing(serviceName string, cfg *hdmodel.Monitor) route.CtxCallback {
 		res = resource.Default()
 	}
 
-    TracerProvider = tracesdk.NewTracerProvider(
-        tracesdk.WithSpanProcessor(processor),
+	TracerProvider = tracesdk.NewTracerProvider(
+		tracesdk.WithSpanProcessor(processor),
 		tracesdk.WithResource(res),
 		tracesdk.WithSampler(tracesdk.TraceIDRatioBased(1.0)), // 采样率100%
 	)
