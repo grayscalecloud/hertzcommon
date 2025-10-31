@@ -103,6 +103,8 @@ func registerMiddleware(h *server.Hertz, cfg *hertzoteltracing.Config, hzCfg *hd
 		hlog.SetOutput(io.MultiWriter(writers...))
 	}
 
+	// 将租户/商户/用户信息附加到当前请求 Span，放在最后，确保其他中间件已执行
+	h.Use(monitor.AttachTenantAttributes())
 }
 func logLevel(level string) hlog.Level {
 	switch level {
