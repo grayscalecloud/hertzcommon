@@ -9,7 +9,7 @@ require (
 	github.com/hertz-contrib/obs-opentelemetry/logging/logrus v0.1.1
 	github.com/hertz-contrib/obs-opentelemetry/provider v0.3.0
 	github.com/hertz-contrib/obs-opentelemetry/tracing v0.4.1
-	github.com/nacos-group/nacos-sdk-go v1.1.6
+	github.com/nacos-group/nacos-sdk-go/v2 v2.3.5
 	github.com/prometheus/client_golang v1.23.2
 	go.opentelemetry.io/otel v1.38.0
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.38.0
@@ -21,7 +21,7 @@ require (
 )
 
 require (
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.18 // indirect
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.1800 // indirect
 	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
@@ -92,5 +92,5 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250825161204-c5933d9347a5 // indirect
 	google.golang.org/grpc v1.75.0 // indirect
 	google.golang.org/protobuf v1.36.8 // indirect
-	gopkg.in/ini.v1 v1.42.0 // indirect
+	gopkg.in/ini.v1 v1.67.0 // indirect
 )
