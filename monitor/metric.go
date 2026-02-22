@@ -36,6 +36,12 @@ import (
 var Reg *prometheus.Registry
 
 func initMetric(serverName string, cfg *hdmodel.Monitor) route.CtxCallback {
+	if cfg.Prometheus.Enable {
+		hlog.Info("开启Prometheus监控")
+	} else {
+		hlog.Info("未开启Prometheus监控")
+		return func(ctx context.Context) {}
+	}
 	Reg = prometheus.NewRegistry()
 	Reg.MustRegister(collectors.NewGoCollector())
 	Reg.MustRegister(collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}))
@@ -78,16 +84,20 @@ func initMetric(serverName string, cfg *hdmodel.Monitor) route.CtxCallback {
 
 	// 获取本地IP
 	localIp := utils.MustGetLocalIPv4()
-	fmt.Println(localIp)
-	ip, err := net.ResolveTCPAddr("tcp", fmt.Sprintf("%s:%d", localIp, cfg.Prometheus.MetricsPort))
+	metricsAddr := fmt.Sprintf("%s:%d", localIp, cfg.Prometheus.MetricsPort)
+	hlog.Info("Metrics地址:", metricsAddr)
+
+	// 验证metrics地址是否合法
+	_, err = net.ResolveTCPAddr("tcp", metricsAddr)
 	if err != nil {
-		hlog.Error(err)
+		hlog.Error("解析metrics地址失败:", err)
+		return func(ctx context.Context) {}
 	}
 
 	// 注册服务到Nacos
 	serviceName := serverName + "_metrics"
 	_, err = client.RegisterInstance(vo.RegisterInstanceParam{
-		Ip:          ip.String(),
+		Ip:          localIp,
 		Port:        uint64(cfg.Prometheus.MetricsPort),
 		ServiceName: serviceName,
 		GroupName:   cfg.Registry.Group,
@@ -106,17 +116,17 @@ func initMetric(serverName string, cfg *hdmodel.Monitor) route.CtxCallback {
 	// 启动metrics服务
 	http.Handle("/metrics", promhttp.HandlerFor(Reg, promhttp.HandlerOpts{}))
 	go func() {
-		err := http.ListenAndServe(fmt.Sprintf("%s:%d", localIp, cfg.Prometheus.MetricsPort), nil)
+		err := http.ListenAndServe(metricsAddr, nil)
 		if err != nil {
-
+			hlog.Error("启动metrics服务失败:", err)
 		}
-	}() //nolint:errcheck
+	}()
 
 	// 返回取消注册函数
 	return func(ctx context.Context) {
 		// 取消注册服务
 		_, err = client.DeregisterInstance(vo.DeregisterInstanceParam{
-			Ip:          ip.String(),
+			Ip:          localIp,
 			Port:        uint64(cfg.Prometheus.MetricsPort),
 			ServiceName: serviceName,
 			GroupName:   cfg.Registry.Group,
